@@ -1,17 +1,18 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿// App.xaml.cs
 
-namespace MauiJintAsyncApp
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
+namespace MauiJintAsyncApp;
+
+public partial class App : Application
 {
-    public partial class App : Application
-    {
-        public App()
-        {
-            InitializeComponent();
-        }
+	public App()
+	{
+		InitializeComponent();
+	}
 
-        protected override Window CreateWindow(IActivationState? activationState)
-        {
-            return new Window(new AppShell());
-        }
-    }
+	protected override Window CreateWindow(IActivationState? activationState)
+	{
+		return new Window(new AppShell());
+	}
 }
