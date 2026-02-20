@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
@@ -19,6 +19,7 @@
 		<Nullable>enable</Nullable>
 		<MauiVersion>10.0.31</MauiVersion>
 		<LangVersion>preview</LangVersion>
+		<NoWarn>MCTEXP001;CS0436</NoWarn>
 
 		<!-- Display name -->
 		<ApplicationTitle>MauiJintAsyncApp</ApplicationTitle>
@@ -40,6 +41,11 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<MauiDebug>true</MauiDebug>
+		<EnableXamlDiagnostics>true</EnableXamlDiagnostics>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
@@ -58,14 +64,29 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
+	<PropertyGroup>
+		<JintVersion>4.6.0</JintVersion>
+		<CommunityToolkitMauiVersion>14.0.0</CommunityToolkitMauiVersion>
+		<CommunityToolkitMvvmVersion>8.4.0</CommunityToolkitMvvmVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="$([System.Version]::Parse('$(JintVersion)')) &gt;= $([System.Version]::Parse('4.4.1'))">
+		<DefineConstants>$(DefineConstants);JINT_441_OR_GREATER</DefineConstants>
+	</PropertyGroup>
+
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<AssemblyMetadata Include="AppInfo.MauiVersion" Value="$(MauiVersion)" />
+		<AssemblyMetadata Include="AppInfo.CommunityToolkitMauiVersion" Value="$(CommunityToolkitMauiVersion)" />
+		<AssemblyMetadata Include="AppInfo.CommunityToolkitMvvmVersion" Value="$(CommunityToolkitMvvmVersion)" />
+		<AssemblyMetadata Include="AppInfo.JintVersion" Value="$(JintVersion)" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
-		<!--
-		-->
-		<!--<PackageReference Include="Jint" Version="4.5.0" />-->
-	<PackageReference Include="Jint" Version="4.3.0" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="$(CommunityToolkitMauiVersion)" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="$(CommunityToolkitMvvmVersion)" />
+		<PackageReference Include="Jint" Version="$(JintVersion)" />
 	</ItemGroup>
 
 </Project>

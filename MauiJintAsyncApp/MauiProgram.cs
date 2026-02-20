@@ -1,10 +1,9 @@
 ﻿// MauiProgram.cs
 
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 
 namespace MauiJintAsyncApp;
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 public static class MauiProgram
 {
@@ -13,6 +12,7 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
+			.UseMauiCommunityToolkit()
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -22,6 +22,8 @@ public static class MauiProgram
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif
+
+		Routing.RegisterRoute(nameof(JintPage), typeof(JintPage));
 
 		return builder.Build();
 	}

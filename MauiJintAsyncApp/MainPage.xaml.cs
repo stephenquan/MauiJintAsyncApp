@@ -1,16 +1,28 @@
-﻿// MainPage.xaml.cs
+// MainPage.xaml.cs
 
 namespace MauiJintAsyncApp;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
 public partial class MainPage : ContentPage
 {
-	public MainViewModel VM { get; } = new();
-
 	public MainPage()
 	{
-		BindingContext = VM;
 		InitializeComponent();
 	}
+
+	async void OnRunTest(object sender, EventArgs e)
+	{
+		if (((Button)sender).CommandParameter?.ToString() is string delayString
+			&& int.TryParse(delayString, out int delay))
+		{
+			ItemType.CalculationDelay = delay;
+			XFormFunctions.CalcTime = delay;
+			await Shell.Current.GoToAsync(nameof(JintPage));
+		}
+	}
+
+	void OnGC(object sender, EventArgs e)
+	{
+		GC.Collect();
+	}
 }
+
