@@ -4,7 +4,9 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:MauiJintAsyncApp"
-    Title="StartPage">
+    xmlns:r="clr-namespace:System.Reflection;assembly=netstandard"
+    Title="Main Page"
+    x:DataType="local:MainPage">
     <Grid RowDefinitions="*,Auto">
         <VerticalStackLayout
             Padding="30"
@@ -21,10 +23,23 @@
             <Button Clicked="OnGC" Text="GC" />
         </VerticalStackLayout>
         <VerticalStackLayout Grid.Row="1" Padding="30">
-            <Label Text="{Binding Source={x:Static local:AppInfo.MauiVersion}, StringFormat='Maui Version: {0}'}" />
-            <Label Text="{Binding Source={x:Static local:AppInfo.CommunityToolkitMauiVersion}, StringFormat='CommunityToolkit.Maui Version: {0}'}" />
-            <Label Text="{Binding Source={x:Static local:AppInfo.CommunityToolkitMvvmVersion}, StringFormat='CommunityToolkit.Mvvm Version: {0}'}" />
-            <Label Text="{Binding Source={x:Static local:AppInfo.JintVersion}, StringFormat='Jint Version: {0}'}" />
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding AppVersionInfos}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="r:AssemblyMetadataAttribute">
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <FormattedString.Spans>
+                                        <Span Text="{Binding Key}" />
+                                        <Span Text=": " />
+                                        <Span Text="{Binding Value}" />
+                                    </FormattedString.Spans>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

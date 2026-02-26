@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Jint;
+using Jint.Native;
 
 namespace MauiJintAsyncApp;
 
@@ -10,6 +11,8 @@ namespace MauiJintAsyncApp;
 
 public partial class ItemType : ObservableObject, IRecipient<FormDisposedMessage>
 {
+	Engine engine;
+
 	public static int CalculationDelay { get; set; } = 1000;
 	static Random random = new Random();
 
@@ -32,7 +35,7 @@ public partial class ItemType : ObservableObject, IRecipient<FormDisposedMessage
 	public string ExpressionScript =>
 		$$"""
 		async function main() {
-			return await math_async('{{Operator}}', {{ValueA}}, {{ValueB}});
+			return await __item_type.math_promise('{{Operator}}', {{ValueA}}, {{ValueB}});
 		}
 		""";
 
@@ -47,6 +50,8 @@ public partial class ItemType : ObservableObject, IRecipient<FormDisposedMessage
 
 	public ItemType()
 	{
+		engine = new Engine(SetEngineOptions);
+
 		InstanceCount++;
 		System.Diagnostics.Trace.WriteLine($"ItemType created. ItemId={ItemId}, InstanceCount={InstanceCount}");
 
@@ -69,8 +74,7 @@ public partial class ItemType : ObservableObject, IRecipient<FormDisposedMessage
 			await Task.Delay(50);
 			try
 			{
-				Engine engine = new(SetEngineOptions);
-				engine.SetAsyncFunc<string, double, double, double>("math_async", math_async);
+				engine.SetValue("__item_type", this);
 				string fullScript =
 					$$"""
 					{{ExpressionScript}}
@@ -78,10 +82,10 @@ public partial class ItemType : ObservableObject, IRecipient<FormDisposedMessage
 					(async () => {
 						try {
 							var result = await main();
-							__set_result(result);
+							__execute_task.SetResult(result);
 						}
 						catch (err) {
-							__set_error(err);
+							__execute_task.SetError(err);
 						}
 					})();
 					""";
@@ -114,6 +118,9 @@ public partial class ItemType : ObservableObject, IRecipient<FormDisposedMessage
 			_ => throw new InvalidOperationException($"Unsupported operator: {op}")
 		};
 	}
+
+	public JsValue math_promise(string op, double a, double b)
+		=> engine.ToJsPromise(math_async, op, a, b);
 
 	public void Receive(FormDisposedMessage message)
 	{

@@ -19,7 +19,7 @@ public partial class JintPage : ContentPage, IRecipient<FormDisposedMessage>
 
 		BindingContext = this;
 		InitializeComponent();
-		WeakReferenceMessenger.Default.RegisterAll(this);
+		//WeakReferenceMessenger.Default.RegisterAll(this);
 
 		_ = Dispatcher.Dispatch(async () => await FinalizeInitialization());
 	}
@@ -48,6 +48,4 @@ public partial class JintPage : ContentPage, IRecipient<FormDisposedMessage>
 		MyItems.Clear();
 	}
 }
-
-public record FormDisposedMessage { }
 

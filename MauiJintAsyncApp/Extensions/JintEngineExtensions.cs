@@ -53,7 +53,7 @@ public static class JintEngineExtensions
 		=> (p1, p2, p3) => engine.ToJsPromise(asyncFunc, p1, p2, p3, finalizePromise);
 
 	// --- SetValue helpers ---
-
+#if TODO
 	public static Engine SetAsyncFunc<T1, TReturn>(this Engine engine, string name, Func<T1, Task<TReturn>> asyncFunc, Action<Action>? finalizePromise = null)
 		=> engine.SetValue(name, engine.ToJsPromiseFunc(asyncFunc, finalizePromise));
 
@@ -62,18 +62,26 @@ public static class JintEngineExtensions
 
 	public static Engine SetAsyncFunc<T1, T2, T3, TReturn>(this Engine engine, string name, Func<T1, T2, T3, Task<TReturn>> asyncFunc, Action<Action>? finalizePromise = null)
 		=> engine.SetValue(name, engine.ToJsPromiseFunc(asyncFunc, finalizePromise));
+#endif
 
 	public static async Task<T> ExecuteAsync<T>(this Engine engine, string script)
 	{
-		TaskCompletionSource<object?> tcs = new();
-		engine.SetValue("__set_result", new Action<object?>(result => tcs.SetResult(result)));
-		engine.SetValue("__set_error", new Action<string>((message) => tcs.SetException(new Exception(message))));
+		JintExecuteTask task = new();
+		engine.SetValue("__execute_task", task);
 		engine.Evaluate(script);
-		var result = await tcs.Task;
+		var result = await task.GetResult();
 		if (result is not T typedResult)
 		{
 			throw new InvalidCastException($"Expected result of type {typeof(T)}, but got {result?.GetType()}");
 		}
 		return typedResult;
+	}
+
+	partial class JintExecuteTask
+	{
+		TaskCompletionSource<object?> tcs = new();
+		public void SetResult(object? result) => tcs.SetResult(result);
+		public void SetError(string message) => tcs.SetException(new Exception(message));
+		public async Task<object?> GetResult() => await tcs.Task;
 	}
 }

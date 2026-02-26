@@ -1,11 +1,20 @@
 // MainPage.xaml.cs
 
+using System.Reflection;
+
 namespace MauiJintAsyncApp;
 
 public partial class MainPage : ContentPage
 {
+	public List<AssemblyMetadataAttribute> AppVersionInfos { get; }
+		= typeof(MainPage).Assembly
+			.GetCustomAttributes<AssemblyMetadataAttribute>()
+			.Where(a => a.Key.StartsWith("AppInfo."))
+			.ToList();
+
 	public MainPage()
 	{
+		BindingContext = this;
 		InitializeComponent();
 	}
 
@@ -15,7 +24,6 @@ public partial class MainPage : ContentPage
 			&& int.TryParse(delayString, out int delay))
 		{
 			ItemType.CalculationDelay = delay;
-			XFormFunctions.CalcTime = delay;
 			await Shell.Current.GoToAsync(nameof(JintPage));
 		}
 	}

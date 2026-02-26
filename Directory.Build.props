@@ -18,8 +18,8 @@
     <NuGetAuditMode>all</NuGetAuditMode>
 
     <!-- MAUI Specific -->
-    <MauiVersion>10.0.31</MauiVersion>
-    <MauiPackageVersion>10.0.31</MauiPackageVersion>
+    <MauiVersion>10.0.40</MauiVersion>
+    <MauiPackageVersion>10.0.40</MauiPackageVersion>
     <NextMauiPackageVersion>10.0.0</NextMauiPackageVersion>
     <MauiStrictXamlCompilation>true</MauiStrictXamlCompilation>
     <SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>
@@ -27,6 +27,15 @@
 
     <!-- CommunityToolkit.Maui -->
     <NoWarn>$(NoWarn);MCTEXP001;CS0436</NoWarn>
+
+    <!-- Full AOT compilation and trimming -->
+<!--
+    <PublishAot>true</PublishAot>
+    <PublishAotUsingRuntimePack>true</PublishAotUsingRuntimePack>
+    <OptimizationPreference>Size</OptimizationPreference>
+-->
+    <MtouchLink>Full</MtouchLink>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
 
     <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/?tabs=net8plus%2Cwindows -->
     <StripSymbols>false</StripSymbols>

@@ -17,9 +17,6 @@
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<MauiVersion>10.0.31</MauiVersion>
-		<LangVersion>preview</LangVersion>
-		<NoWarn>MCTEXP001;CS0436</NoWarn>
 
 		<!-- Display name -->
 		<ApplicationTitle>MauiJintAsyncApp</ApplicationTitle>
